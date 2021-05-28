@@ -1,0 +1,33 @@
+{
+  "name": "tmplit",
+  "version": "0.0.0",
+  "description": "App to bootstrap projects from templates -- create-x-app",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"npm start\"",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinclabs/tmplit.git"
+  },
+  "keywords": [
+    "createXApp",
+    "bootstrap",
+    "templating",
+    "setup"
+  ],
+  "author": "Subbu Alagappan <s@subbu.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sinclabs/tmplit/issues"
+  },
+  "homepage": "https://github.com/sinclabs/tmplit#readme",
+  "devDependencies": {
+    "ts-node-dev": "^1.1.6",
+    "tsc-watch": "^4.4.0",
+    "typescript": "^4.3.2"
+  }
+}
