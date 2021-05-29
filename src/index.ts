@@ -1,38 +1,18 @@
-import fs from "fs";
-import path from "path";
-import StreamZip from "node-stream-zip";
-import Mustache from "mustache";
+import Tmplit from "./tmplit";
 
-const templateZipfileName = './typescript-node-template.tmplit';
-const configFileName = 'tmplit.config.json';
-const destinationFolder = './newProject';
+const templateZipfileName = './testSpace/typescript-node-template.tmplit';
+const destinationFolder = './testSpace/newProject';
 
 (async function main() {
-    const zip = new StreamZip.async({ file: templateZipfileName })
+    const tmplit = new Tmplit(templateZipfileName)
 
-    const entriesCount = await zip.entriesCount
-    if(entriesCount < 1) {
-        return
+    const {valid, config} = await tmplit.validate()
+
+    if(!valid) {
+        throw Error("Please provide a valid tmplit file")
     }
 
-    const entries = await zip.entries()
-    if(Object.keys(entries).includes(configFileName)) {
-        const config = JSON.parse((await zip.entryData('tmplit.config.json')).toString())
-        console.log(config);
+    await tmplit.extract(config, destinationFolder)
 
-        for (const entry of Object.values(entries)) {
-            const desc = entry.isDirectory ? 'directory' : `${entry.size} bytes`;
-            console.log(`Entry ${entry.name}: ${desc}`);
-            if(!entry.isDirectory) {
-                const fileTmlptData = (await zip.entryData(entry.name)).toString()
-                const fileData = Mustache.render(fileTmlptData, config.keys)
-                fs.writeFileSync(path.join(destinationFolder, entry.name), fileData)
-            } else {
-                fs.mkdirSync(path.join(destinationFolder, entry.name))
-            }
-            //await zip.extract(entry.name, destinationFolder);
-        }
-    }
-
-    await zip.close();
+    await tmplit.cleanUp()
 })()
